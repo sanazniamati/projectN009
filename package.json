@@ -1,7 +1,7 @@
 {
   "name": "react-konva-transformer",
   "description": "React Konva demo for Transformer",
-  "version": "0.0.9",
+  "version": "0.1.9",
   "keywords": [
     "canvas",
     "react",

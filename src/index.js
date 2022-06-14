@@ -1,6 +1,6 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Stage, Layer, Rect, Transformer } from 'react-konva';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Stage, Layer, Transformer, Circle } from "react-konva";
 
 const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
   const shapeRef = React.useRef();
@@ -16,44 +16,51 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
 
   return (
     <React.Fragment>
-      <Rect
+      <Circle
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps}
         draggable
-        onDragEnd={(e) => {
+        onDragEnd={e => {
           onChange({
             ...shapeProps,
             x: e.target.x(),
-            y: e.target.y(),
+            y: e.target.y()
           });
         }}
-        onTransformEnd={(e) => {
-          // transformer is changing scale of the node
-          // and NOT its width or height
-          // but in the store we have only width and height
-          // to match the data better we will reset scale on transform end
-          const node = shapeRef.current;
-          const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
-
-          // we will reset it back
-          node.scaleX(1);
-          node.scaleY(1);
-          onChange({
-            ...shapeProps,
-            x: node.x(),
-            y: node.y(),
-            // set minimal value
-            width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY),
-          });
-        }}
+        // onTransformEnd={() => {
+        //   // transformer is changing scale of the node
+        //   // and NOT its width or height
+        //   // but in the store we have only width and height
+        //   // to match the data better we will reset scale on transform end
+        //   const node = shapeRef.current;
+        //   const scaleX = node.scaleX();
+        //   const scaleY = node.scaleY();
+        //
+        //   // we will reset it back
+        //   node.scaleX(1);
+        //   node.scaleY(1);
+        //   onChange({
+        //     ...shapeProps,
+        //     x: node.x(),
+        //     y: node.y(),
+        //     // set minimal value
+        //     width: Math.max(5, node.width() * scaleX),
+        //     height: Math.max(node.height() * scaleY)
+        //   });
+        // }}
       />
+
       {isSelected && (
         <Transformer
           ref={trRef}
+          borderStroke={"yellow"}
+          borderStrokeWidth={5}
+          anchorStroke={"yellow"}
+          anchorFill={"yellow"}
+          // anchorCornerRadius={"circle"}
+          centeredScaling={true}
           boundBoxFunc={(oldBox, newBox) => {
             // limit resize
             if (newBox.width < 5 || newBox.height < 5) {
@@ -69,28 +76,37 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }) => {
 
 const initialRectangles = [
   {
-    x: 10,
-    y: 10,
+    x: 50,
+    y: 50,
     width: 100,
     height: 100,
-    fill: 'red',
-    id: 'rect1',
+    radius: 50,
+    fill: "red",
+    id: "circle1"
   },
   {
     x: 150,
     y: 150,
     width: 100,
     height: 100,
-    fill: 'green',
-    id: 'rect2',
+    fill: "green",
+    id: "circle2"
   },
+
+  {
+    x: 250,
+    y: 250,
+    radius: 50,
+    fill: "black",
+    id: "circle3"
+  }
 ];
 
 const App = () => {
   const [rectangles, setRectangles] = React.useState(initialRectangles);
   const [selectedId, selectShape] = React.useState(null);
 
-  const checkDeselect = (e) => {
+  const checkDeselect = e => {
     // deselect when clicked on empty area
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
@@ -110,12 +126,13 @@ const App = () => {
           return (
             <Rectangle
               key={i}
+              // color={rect.color}
               shapeProps={rect}
               isSelected={rect.id === selectedId}
               onSelect={() => {
                 selectShape(rect.id);
               }}
-              onChange={(newAttrs) => {
+              onChange={newAttrs => {
                 const rects = rectangles.slice();
                 rects[i] = newAttrs;
                 setRectangles(rects);
@@ -128,6 +145,6 @@ const App = () => {
   );
 };
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(<App />);
