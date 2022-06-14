@@ -10,3 +10,7 @@ It provides declarative and reactive bindings to the [Konva Framework](https://k
 **How to resize and rotate canvas shapes with react and konva?**
 
 Documentation [react-konva](https://konvajs.org/docs/react/Transformer.html)
+
+change log:
+0.1.0 anton sample....
+0.2.0 square replaced with circle
