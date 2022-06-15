@@ -13,6 +13,8 @@ Documentation [react-konva](https://konvajs.org/docs/react/Transformer.html)
 
 change log:
 
-0.1.9 anton sample....
+Anton version 0.0.1 
 
-0.2.9 square replaced with circle
+square replaced with circle 0.1.0
+
+
